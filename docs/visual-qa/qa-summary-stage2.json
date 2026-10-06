@@ -1,0 +1,74 @@
+{
+  "marquee_has_icons": true,
+  "modul": {
+    "heading_text": "Satu workspace, setiap alat di tempatnya.",
+    "heading_mb_vh": 7.499035493827161,
+    "tabs": [
+      "NEXUS AI",
+      "Music",
+      "Downloader",
+      "Kasira",
+      "Alat Produktivitas"
+    ],
+    "list_x_vw": 4.29931640625,
+    "frame_x_start_vw": 28.999837239583332,
+    "frame_x_end_vw": 61.99951171875,
+    "frame_w_vw": 32.99967447916667,
+    "frame_h_vh": 76.9997427983539,
+    "frame_ratio": "0.85",
+    "detail_x_vw": 67.99967447916667
+  },
+  "statement": {
+    "text": "NEXUS AI OFFICE adalah ekosistem workspace multifungsi yang terus berkembang. Satu tempat untuk berbagai kebutuhan digital, produktivitas, tools, dan operasional.",
+    "has_10_plus": false
+  },
+  "proyek": {
+    "card_w_vw": 42.2998046875,
+    "media_ratio": "1.50",
+    "cat_fontsize": "16px",
+    "cat_text_transform": "none",
+    "cat_text": "Digital workspace"
+  },
+  "cursor": {
+    "width": 90,
+    "height": 90,
+    "text": "LIHAT",
+    "opacity": "1",
+    "bg": "rgb(232, 89, 12)"
+  },
+  "prinsip": {
+    "heading_text": "Ruang kerja digital yang dirancang untuk bergerak bersama kebutuhanmu.",
+    "sticky_title": "Ekosistem Workspace Digital",
+    "sticky_sub": "Dibuat oleh Team NEXUS",
+    "sticky_w_vw": 25.999348958333336,
+    "cards_count": 5,
+    "card0_w_vw": 23.399251302083332,
+    "card0_bg": "rgb(251, 246, 241)",
+    "has_nav_arrows": true,
+    "arrow_scroll_delta": 469
+  },
+  "footer": {
+    "links": [
+      "Beranda",
+      "Proyek",
+      "Prinsip",
+      "Workspace",
+      "Downloader",
+      "Kasira",
+      "QR Tools",
+      "Music",
+      "NEXUS AI OFFICE",
+      "Kasira",
+      "AURA GLOBAL"
+    ],
+    "totop_text": "Kembali ke atas",
+    "giant_text": "NEXUS AI OFFICE",
+    "giant_w": 1920,
+    "wrap_w": 1920,
+    "giant_clipped_sides": false,
+    "has_curve_svg": true,
+    "has_team_nexus": true
+  },
+  "page_no_h_scroll_desktop": true,
+  "page_no_h_scroll_mobile": true
+}

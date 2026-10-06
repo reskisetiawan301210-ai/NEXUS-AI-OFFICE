@@ -1,0 +1,1 @@
+@include('lifehub.music.index')

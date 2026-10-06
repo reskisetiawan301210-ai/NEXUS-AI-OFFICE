@@ -1,0 +1,3454 @@
+/* ============================================================
+   NEXUS AI OFFICE — PUBLIC LANDING PAGE
+   Self-contained stylesheet. Loaded only by landing.blade.php,
+   never by the authenticated app, so no rule here can reach the
+   dashboard, Kasira, Music or the auth screens.
+
+   All motion is driven by transform/opacity only, and every
+   pinned/scrubbed effect is disabled under
+   (prefers-reduced-motion: reduce).
+   ============================================================ */
+
+:root {
+    --robot-h: 112vh;
+    --eyes-y: 30vh;
+    --face-x: 65vw;
+    --nx-amber: #F5A623;
+    /* Hero gradient (Bagian 5, sumber kebenaran final). */
+    --hero-grad-start: #8E0E00;
+    --hero-grad-mid: #E8430F;
+    --hero-grad-end: #FF8A1F;
+
+    /* Primary accent */
+    --color-accent: #F0490A;
+    --color-accent-2: #F5A623;
+
+    /* Spec palette */
+    --nx-violet: #4B0FB8;
+    --nx-lavender: #C9B6F2;
+    --nx-amber: #F5A623;
+    --nx-grey-1: #444444;
+    --nx-grey-2: #5F5F5F;
+    --nx-grey-3: #BBBBBB;
+    --text-on-dark: #FFFFFF;
+    --text-on-light: #111111;
+    --muted-on-light: #6B6B6B;
+
+    /* Scrub card — violet Zywra (Bagian 5/7.3). */
+    --scrub-card-bg: #4B0FB8;
+    --scrub-card-grid: rgba(255, 255, 255, 0.05);
+
+    --color-cream: #F4F2E6;
+    --color-black: #0A0A0A;
+    --color-white: #FFFFFF;
+
+    --font-hero: 'Orbitron', sans-serif;
+    --font-pinned: 'Outfit', sans-serif;
+    --font-heading: 'Plus Jakarta Sans', sans-serif;
+    --font-display: 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --dur-entrance: 0.9s;
+    --dur-transition: 0.6s;
+    --stagger: 0.12s;
+
+    /* Derived tokens — kept local so the landing page stays a closed system. */
+    --nx-ink: #0A0806;
+    --nx-paper: #F7F6F1;
+    --nx-muted: #8C837D;
+    --nx-line-dark: rgba(255, 255, 255, 0.14);
+    --nx-line-light: rgba(10, 8, 6, 0.12);
+    --nx-nav-h: 64px;
+    --nx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Legacy aliases — kept so no rule is left pointing at a dead token. */
+    --color-base: var(--color-black);
+    --color-accent-1: var(--color-accent);
+    --color-accent-3: var(--color-accent-2);
+}
+
+/* ---------------------------------------------------------
+   RESET (scoped to the landing page only)
+   --------------------------------------------------------- */
+.nx-body,
+.nx-body * {
+    box-sizing: border-box;
+}
+
+/* Akar (e): overflow-x clip pada html dan body, bukan hidden. */
+html,
+.nx-body {
+    overflow-x: clip;
+}
+
+.nx-body {
+    margin: 0;
+    padding: 0;
+    background: var(--color-base);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.nx-body h1,
+.nx-body h2,
+.nx-body h3,
+.nx-body h4,
+.nx-body p,
+.nx-body figure,
+.nx-body ul,
+.nx-body ol {
+    margin: 0;
+    padding: 0;
+}
+
+.nx-body ul,
+.nx-body ol {
+    list-style: none;
+}
+
+.nx-body a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.nx-body img,
+.nx-body svg {
+    display: block;
+    max-width: 100%;
+}
+
+.nx-body button {
+    font: inherit;
+    color: inherit;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.nx-body :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+/* Lenis owns the scroll position; html must not smooth-scroll on top of it. */
+.nx-body.nx-lenis-active {
+    height: auto;
+}
+
+.nx-body.nx-lenis-stopped {
+    overflow: hidden;
+}
+
+.nx-shell {
+    position: relative;
+    width: 100%;
+    overflow-x: clip;
+}
+
+/* Shared rhythm: every section sits on the same gutter as the reference. */
+.nx-gutter {
+    padding-inline: clamp(1.5rem, 8vw, 8rem);
+}
+
+.nx-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0;
+}
+
+/* ============================================================
+   SECTION 0 — NAVBAR
+   ============================================================ */
+.nx-nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 1000;
+    height: var(--nx-nav-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-inline: 5vw;
+    color: var(--text-on-dark);
+    transition: color var(--dur-transition) var(--nx-ease),
+        background-color var(--dur-transition) var(--nx-ease),
+        border-color var(--dur-transition) var(--nx-ease),
+        backdrop-filter var(--dur-transition) var(--nx-ease);
+    border-bottom: 1px solid transparent;
+}
+
+/* The bar only grows a surface once it leaves the hero. */
+.nx-nav.is-stuck {
+    background: color-mix(in srgb, var(--color-base) 72%, transparent);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    border-bottom-color: var(--nx-line-dark);
+}
+
+.nx-nav[data-theme='light'] {
+    color: var(--nx-ink);
+}
+
+.nx-nav[data-theme='light'].is-stuck {
+    background: color-mix(in srgb, var(--nx-paper) 76%, transparent);
+    border-bottom-color: var(--nx-line-light);
+}
+
+.nx-nav__brand {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.nx-nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+/* Pill putih 36px — SELALU bg putih + teks gelap #111 di semua state
+   (akar f): tidak ada state yang membuat teks putih/transparan di atas putih. */
+.nx-nav__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 36px;
+    min-height: 36px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0;
+    white-space: nowrap;
+    color: #111111 !important;
+    background: #FFFFFF;
+    transition: transform 0.25s var(--nx-ease), background-color 0.25s var(--nx-ease),
+        color 0.25s var(--nx-ease);
+}
+
+.nx-nav__cta:hover {
+    transform: translateY(-1px);
+    background: #111111;
+    color: #FFFFFF !important;
+}
+
+.nx-nav__cta svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    transition: transform 0.25s var(--nx-ease);
+}
+
+.nx-nav__cta:hover svg {
+    transform: translateX(3px);
+}
+
+/* Hamburger 3 garis tebal (Bagian 7.1): 3px tebal, lebar 20px, gap 5px. */
+.nx-nav__burger {
+    display: inline-grid;
+    place-items: center;
+    align-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    opacity: 0.85;
+}
+
+.nx-nav__burger:hover {
+    opacity: 1;
+}
+
+.nx-nav__burger span {
+    display: block;
+    width: 20px;
+    height: 3px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 0.3s var(--nx-ease), opacity 0.2s ease;
+}
+
+.nx-nav__burger span + span {
+    margin-top: 5px;
+}
+
+/* Full-screen overlay menu */
+.nx-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: calc(var(--nx-nav-h) + 2rem) clamp(1.5rem, 8vw, 8rem) 3rem;
+    background: var(--color-black);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.45s var(--nx-ease), visibility 0.45s;
+}
+
+.nx-overlay.is-open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.nx-overlay__link {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 7vw, 3.5rem);
+    line-height: 1.3;
+    text-transform: uppercase;
+    color: var(--color-white);
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.5s var(--nx-ease), transform 0.5s var(--nx-ease), color 0.25s ease;
+}
+
+.nx-overlay.is-open .nx-overlay__link {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nx-overlay__link:hover {
+    color: var(--color-accent);
+}
+
+.nx-overlay__close {
+    position: absolute;
+    top: 14px;
+    right: clamp(1rem, 4vw, 2.5rem);
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid var(--nx-line-dark);
+    color: var(--color-white);
+}
+
+.nx-body.nx-no-scroll {
+    overflow: hidden;
+}
+
+/* ============================================================
+   SECTION 1 — HERO
+   Memenuhi semua syarat ukur:
+   1. --robot-h: 112vh; --eyes-y: 30vh; --face-x: 65vw;
+   2. Bbox wajah (x 42%-58%, y 18%-56%) tidak berpotongan dengan kartu kaca, headline, atau tagline.
+   3. Headline 3 baris: MEMBANGUN RUANG / KERJA [rotor] / DALAM SATU TEMPAT
+      Ujung kanan baris terpanjang <= 66vw. Rotor amber #F5A623 min-width 9ch.
+   4. Kartu kaca: kanan-bawah, tidak menutupi wajah robot maupun rotor.
+   5. Tagline: kiri-bawah.
+   6. Latar: linear-gradient(135deg, #8E0E00 0%, #E8430F 50%, #FF8A1F 100%).
+      Vignette tipis kiri-atas (opacity <= 0.25).
+   ============================================================ */
+:root {
+    --robot-h: 112vh;
+    --eyes-y: 30vh;
+    --face-x: 65vw;
+    --nx-amber: #F5A623;
+}
+
+.nx-hero {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(135deg, #8E0E00 0%, #E8430F 50%, #FF8A1F 100%) !important;
+    background-color: #E8430F !important;
+}
+
+/* Vignette sangat tipis kiri-atas (opacity <= 0.25) agar navbar terbaca */
+.nx-hero__shade {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0) 32%);
+}
+
+/* Noise texture fractal */
+.nx-hero__grain {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* -------------------------------------------------------------
+   HERO ROBOT (Sosok Utama)
+   Berbasis variabel --robot-h, --eyes-y, --face-x
+   ------------------------------------------------------------- */
+.nx-hero__visual {
+    position: absolute;
+    height: var(--robot-h);
+    width: calc(var(--robot-h) * 1.5);
+    left: calc(var(--face-x) - (var(--robot-h) * 1.5 * 0.5));
+    top: calc(var(--eyes-y) - (var(--robot-h) * 0.285));
+    z-index: 2;
+    pointer-events: auto;
+    cursor: pointer;
+    will-change: transform;
+}
+
+.nx-hero__figure {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.nx-hero__media,
+.nx-hero__mask {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom center;
+    pointer-events: none;
+}
+
+.nx-hero__media--base {
+    z-index: 2;
+}
+
+/* Masker dengan sapuan dari dagu (chin sweep) */
+.nx-hero__mask {
+    z-index: 3;
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(8px);
+    transition: clip-path 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.45s ease,
+                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+.nx-hero__visual.is-masked .nx-hero__mask {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+}
+
+/* -------------------------------------------------------------
+   HERO CONTENT (Headline, Badge, Copy)
+   ------------------------------------------------------------- */
+.nx-hero__content {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    padding-top: 28vh;
+    padding-left: clamp(2rem, 3.8vw, 4rem);
+    padding-right: 2rem;
+    pointer-events: none;
+}
+
+.nx-hero__copy {
+    position: relative;
+    z-index: 4;
+    width: max-content;
+    max-width: 70vw;
+    pointer-events: auto;
+}
+
+.nx-badge {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 32px;
+    padding-inline: 0.95rem;
+    margin-bottom: 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.12);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.nx-badge::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: #FFFFFF;
+    flex: none;
+}
+
+/* Headline Orbitron 900 3 baris:
+   clamp(2.3rem, 4.6vw, 5.8rem), line-height 1.5, letter-spacing .05em, nowrap setiap baris.
+   Headline z-index di atas robot, text-shadow 0 4px 24px rgba(0,0,0,.35). */
+.nx-hero__headline {
+    position: relative;
+    z-index: 4;
+    width: max-content;
+    max-width: 70vw;
+    margin: 0;
+    font-family: var(--font-hero);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+    color: #FFFFFF;
+    font-size: clamp(2.3rem, 4.6vw, 5.8rem);
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* KATA KUNING: font-size 1.15em dari teks putih, weight 900, #F5A623,
+   translateY(.06em), margin-left .25em, line-height .9 pada span itu
+   agar tinggi baris tidak berubah dan tidak ada layout jumping.
+   Kunci min-width sesuai kata terpanjang pada ukuran 1.15em. Tanpa bayangan kata lama. */
+.nx-swap {
+    position: relative;
+    z-index: 5;
+    display: inline-block;
+    font-size: 1.15em;
+    font-weight: 900;
+    color: #F5A623 !important;
+    transform: translateY(0.06em);
+    margin-left: 0.25em;
+    line-height: 0.9;
+    white-space: nowrap;
+    min-width: 9.2ch;
+    text-shadow: none;
+    vertical-align: baseline;
+}
+
+.nx-line-mask {
+    overflow: hidden;
+    display: block;
+    width: max-content;
+    max-width: 70vw;
+    padding-bottom: 0.06em;
+    margin-bottom: -0.06em;
+    white-space: nowrap;
+}
+
+.nx-line-inner {
+    display: inline-block;
+    will-change: transform;
+}
+
+.nx-line-part {
+    display: inline;
+}
+
+.nx-hero__foot-wrap {
+    display: contents;
+}
+
+/* -------------------------------------------------------------
+   KARTU KACA KANAN-BAWAH
+   Bbox kartu terletak di pojok kanan bawah, tidak menutupi wajah robot
+   maupun rotor kata.
+   ------------------------------------------------------------- */
+.nx-glass {
+    position: absolute;
+    right: clamp(1.5rem, 2.2vw, 3rem);
+    bottom: clamp(1.5rem, 4vh, 3rem);
+    width: clamp(260px, 18.5vw, 300px);
+    z-index: 5;
+    padding: 1.25rem 1.35rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(45, 14, 5, 0.55);
+    -webkit-backdrop-filter: blur(28px);
+    backdrop-filter: blur(28px);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+}
+
+.nx-glass__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.nx-glass__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.nx-glass__content {
+    padding-top: 0.25rem;
+}
+
+.nx-glass__title {
+    margin: 0.75rem 0 0.5rem;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.45;
+    color: #FFFFFF;
+}
+
+.nx-glass__desc {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+/* -------------------------------------------------------------
+   TAGLINE KIRI-BAWAH (Hero Foot)
+   uppercase, font-size clamp(.9rem, 1.05vw, 1.15rem), line-height 1.7,
+   letter-spacing .03em, max-width 36vw, rgba(255,255,255,.92),
+   left 3vw, bottom 5vh.
+   ------------------------------------------------------------- */
+.nx-hero__foot {
+    position: absolute;
+    left: 3vw;
+    bottom: 5vh;
+    z-index: 5;
+    max-width: 36vw;
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: clamp(0.9rem, 1.05vw, 1.15rem);
+    font-weight: 600;
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+/* -------------------------------------------------------------
+   RESPONSIVE (Tablet & Mobile)
+   ------------------------------------------------------------- */
+@media (max-width: 1024px) {
+    :root {
+        --robot-h: 96vh;
+        --eyes-y: 33vh;
+        --face-x: 64vw;
+    }
+
+    .nx-hero__headline {
+        max-width: 52vw;
+        font-size: clamp(1.7rem, 2.8vw, 2.6rem);
+    }
+
+    .nx-glass {
+        width: 270px;
+        right: 1.5rem;
+        bottom: 2rem;
+    }
+}
+
+
+
+/* ============================================================
+   SECTION 2 — PINNED SCRUB (RUANG KERJA ... TERPADU)
+   Sesuai Spesifikasi:
+   A. LAYOUT:
+      - Baris flex terpusat di viewport (y tengah 50vh, baseline sama)
+      - Kata kiri rata-kanan (RUANG KERJA), jarak 2vw dari tepi kiri kartu
+      - Kata kanan rata-kiri (TERPADU #F0490A), mulai 2vw dari tepi kanan kartu
+      - Outfit 900, kapital, clamp(2.4rem, 4.7vw, 6rem), line-height 1
+      - Kartu awal ≈25vw x 29vh, akhir ≈68vw x 67vh, selalu di tengah
+      - Saat scroll, dua kata bergeser keluar masing-masing setengah pertambahan
+        lebar kartu sampai terpotong tepi layar lalu hilang
+      - Kartu tidak menutupi huruf sebelum kata bergeser keluar
+      - Latar: 25vw #000, 36vw #444, 45vw #5F5F5F, 57vw #BBBBBB, 68vw #F5F5F5 -> #FFF
+      - Pin ±700vh, scrub 0.6
+   B. ISI KARTU = Film mini otomatis (GSAP timeline, Outfit 600, pill putih radius 22px
+      teks violet #4B0AA5, kartu violet #4B0FB8 bergrid rgba(255,255,255,.08)):
+      Scene 1: Riak gelombang konsentris & "Setiap kerja dimulai"
+      Scene 2: Disolusi piksel & wordmark "ruang kosong"
+      Scene 3: Tombol bulat putih + tempat sampah gooey + 6 tetesan
+      Scene 4-6: 3 pill jatuh miring, tombol memakan, kerucut cahaya
+      Scene 7: "Lalu kejelasan masuk" + highlight menyapu + kursor tekan mini pill
+      Scene 8: Orbit bola kaca bercahaya, 3 cincin, titik bergerak, kata berganti
+   ============================================================ */
+.nx-scrub {
+    position: relative;
+    z-index: 10;
+    height: 700vh;
+    background: #000000;
+    will-change: background-color;
+}
+
+.nx-scrub__stage {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible; /* Jangan memotong teks dengan overflow hidden */
+    z-index: 5;
+}
+
+.nx-scrub__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    height: 100svh;
+    overflow: visible; /* Jangan memotong teks dengan overflow hidden */
+    pointer-events: auto;
+}
+
+/* Typography dua kata sebaris */
+.nx-scrub__word {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(2.4rem, 4.7vw, 6rem);
+    line-height: 1;
+    white-space: nowrap;
+    will-change: transform, color;
+    user-select: none;
+    letter-spacing: -0.02em;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10; /* Z-index teks di atas kartu */
+}
+
+.nx-scrub__word--left {
+    right: calc(50% + 14.5vw);
+    text-align: right;
+    color: #FFFFFF;
+}
+
+.nx-scrub__word--right {
+    left: calc(50% + 14.5vw);
+    text-align: left;
+    color: #F0490A !important;
+}
+
+/* Kartu Pinned: Awal ≈25vw x 29vh, Akhir ≈68vw x 67vh */
+.nx-scrub__card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 25vw;
+    height: 29vh;
+    background-color: #4B0FB8;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px -12px rgba(75, 15, 184, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    z-index: 2; /* Z-index kartu di bawah teks */
+    will-change: width, height, transform;
+}
+
+.nx-scrub__card-grid {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ============================================================
+   FILM MINI 7 SCENE DI DALAM KARTU UNGU
+   ============================================================ */
+.nx-film {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    overflow: hidden;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.nx-film__scene {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    will-change: opacity, transform;
+}
+
+/* SCENE 0: Riak 3 Lingkaran + Teks + Badge */
+.nx-film__s0 {
+    z-index: 10;
+}
+
+.nx-film__ripple-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.nx-film__ripple {
+    position: absolute;
+    width: clamp(140px, 20vw, 220px);
+    height: clamp(140px, 20vw, 220px);
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    will-change: transform, opacity;
+}
+
+.nx-film__s0-copy {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.2rem, 2.2vw, 2.1rem);
+    color: #FFFFFF;
+}
+
+.nx-film__s0-text {
+    will-change: transform, opacity;
+}
+
+.nx-film__s0-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #FFFFFF;
+    color: #4B0FB8;
+    border-radius: 10px;
+    padding: 0.22em 0.7em;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    will-change: transform, opacity;
+}
+
+.nx-film__s0-d {
+    display: inline-block;
+    will-change: transform, opacity;
+}
+
+.nx-film__s0-rest {
+    display: inline-block;
+    will-change: transform, opacity;
+}
+
+/* SCENE 1, 2, 3: Gooey Trash + Pills + Light Cone */
+.nx-film__s123 {
+    z-index: 10;
+    perspective: 800px;
+}
+
+.nx-film__goo-stage {
+    position: absolute;
+    bottom: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: url(#nxGooFilter);
+    -webkit-filter: url(#nxGooFilter);
+    z-index: 4;
+}
+
+.nx-film__trash-btn {
+    width: clamp(52px, 8.5vw, 84px);
+    height: clamp(52px, 8.5vw, 84px);
+    border-radius: 50%;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+    will-change: transform, border-radius;
+}
+
+.nx-film__drop {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    pointer-events: none;
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+.nx-film__pills-area {
+    position: absolute;
+    bottom: calc(12% + clamp(52px, 8.5vw, 84px) * 0.5 + 16px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.nx-film__pill {
+    width: fit-content;
+    max-width: 82%;
+    white-space: nowrap;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.95rem, 1.4vw, 1.35rem);
+    color: #4B0AA5;
+    background: #FFFFFF;
+    padding: 0.65em 1.5em;
+    border-radius: 999px;
+    box-shadow: inset 0 0 20px rgba(180, 150, 255, 0.7), 0 12px 30px rgba(0, 0, 0, 0.25);
+    will-change: transform, opacity, filter;
+    opacity: 0;
+    transform-origin: center center;
+}
+
+.nx-film__light-cone {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(201, 182, 242, 0.7) 50%, rgba(201, 182, 242, 0.1) 85%, transparent 100%);
+    clip-path: polygon(42% 0%, 58% 0%, 78% 100%, 22% 100%);
+    filter: blur(6px);
+    opacity: 0;
+    z-index: 8;
+    will-change: transform, opacity;
+    pointer-events: none;
+}
+
+/* SCENE 4: Kartu Putih + "Lalu kejelasan masuk." + Kursor + "Mulai" */
+.nx-film__s4 {
+    background: #FFFFFF;
+    box-shadow: inset 0 0 35px rgba(201, 182, 242, 0.8);
+    z-index: 15;
+    flex-direction: column;
+}
+
+.nx-film__s4-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding-inline: 1.5rem;
+}
+
+.nx-film__s4-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.7rem, 3.8vw, 2.7rem);
+    color: #4B0FB8;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.nx-film__highlight {
+    position: relative;
+    display: inline-block;
+    padding: 0 0.15em;
+}
+
+.nx-film__highlight-bg {
+    position: absolute;
+    inset: -0.05em -0.15em;
+    background: #C9B6F2;
+    border-radius: 6px;
+    z-index: 1;
+    transform-origin: left center;
+    will-change: transform;
+}
+
+.nx-film__highlight-txt {
+    position: relative;
+    z-index: 2;
+}
+
+.nx-film__start-pill {
+    position: absolute;
+    bottom: 14%;
+    right: 10%;
+    background: rgba(75, 15, 184, 0.08);
+    border: 1px solid rgba(75, 15, 184, 0.25);
+    color: #4B0FB8;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 5px 16px;
+    border-radius: 999px;
+    z-index: 3;
+    box-shadow: 0 4px 12px rgba(75, 15, 184, 0.08);
+    will-change: transform;
+}
+
+.nx-film__cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 25;
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* SCENE 5: Orbit di Kartu Ungu */
+.nx-film__s5 {
+    z-index: 10;
+    overflow: hidden;
+    background: #4B0FB8;
+}
+
+.nx-film__orbit-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.nx-film__ring {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.35);
+    stroke-width: 1.2px;
+}
+
+.nx-film__sphere-wrap {
+    position: absolute;
+    top: 50%;
+    left: 22%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    will-change: transform, left;
+}
+
+.nx-film__sphere {
+    width: clamp(64px, 11vw, 108px);
+    height: clamp(64px, 11vw, 108px);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #FFFFFF 0%, #C9B6F2 42%, #6A3AE0 82%, #4B0FB8 100%);
+    box-shadow: 0 0 35px rgba(180, 150, 255, 0.65), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nx-film__sphere-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nx-film__orbit-word-wrap {
+    position: absolute;
+    top: 50%;
+    left: calc(22% + clamp(64px, 11vw, 108px) * 0.5 + 2vw);
+    transform: translateY(-50%);
+    z-index: 6;
+}
+
+.nx-film__orbit-word {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.4rem, 3vw, 2.4rem);
+    color: #FFFFFF;
+    white-space: nowrap;
+    will-change: filter, opacity;
+}
+
+.nx-film__orbit-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0 0 8px #FFFFFF;
+    pointer-events: none;
+    z-index: 4;
+}
+
+.nx-film__dot--1 {
+    width: 14px;
+    height: 14px;
+    top: 30%;
+    left: 36%;
+    animation: nx-orbit-float1 14s linear infinite;
+}
+
+.nx-film__dot--2 {
+    width: 20px;
+    height: 20px;
+    top: 70%;
+    left: 42%;
+    animation: nx-orbit-float2 20s linear infinite;
+}
+
+.nx-film__dot--3 {
+    width: 8px;
+    height: 8px;
+    top: 20%;
+    left: 50%;
+    animation: nx-orbit-float3 18s linear infinite;
+}
+
+.nx-film__dot--4 {
+    width: 12px;
+    height: 12px;
+    top: 80%;
+    left: 26%;
+    animation: nx-orbit-float4 24s linear infinite;
+}
+
+.nx-film__dot--5 {
+    width: 6px;
+    height: 6px;
+    top: 48%;
+    left: 56%;
+    animation: nx-orbit-float5 28s linear infinite;
+}
+
+.nx-film__sparkle {
+    position: absolute;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.nx-film__sparkle--1 {
+    top: 22%;
+    right: 24%;
+    animation: nx-twinkle 2.5s ease-in-out infinite;
+}
+
+.nx-film__sparkle--2 {
+    bottom: 20%;
+    right: 16%;
+    animation: nx-twinkle 3.2s ease-in-out 1s infinite;
+}
+
+@keyframes nx-twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.7) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.15) rotate(45deg); }
+}
+
+@keyframes nx-orbit-float1 {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(12px, -8px); }
+    50% { transform: translate(4px, 14px); }
+    75% { transform: translate(-10px, 6px); }
+    100% { transform: translate(0, 0); }
+}
+
+@keyframes nx-orbit-float2 {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-14px, 10px); }
+    50% { transform: translate(-8px, -12px); }
+    75% { transform: translate(12px, -6px); }
+    100% { transform: translate(0, 0); }
+}
+
+@keyframes nx-orbit-float3 {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(16px, 10px); }
+    100% { transform: translate(0, 0); }
+}
+
+@keyframes nx-orbit-float4 {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(-12px, -14px); }
+    100% { transform: translate(0, 0); }
+}
+
+@keyframes nx-orbit-float5 {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(8px, -10px); }
+    100% { transform: translate(0, 0); }
+}
+
+
+/* ============================================================
+   SECTION 3 — MARQUEE
+   ============================================================ */
+.nx-marquee {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 8vh;
+    background: var(--color-white);
+    color: var(--nx-ink);
+    border-top: 1px solid var(--nx-line-light);
+    border-bottom: 1px solid var(--nx-line-light);
+    overflow: hidden;
+    padding-block: clamp(1rem, 2.4vw, 1.75rem);
+}
+
+.nx-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: nx-marquee 30s linear infinite;
+}
+
+.nx-marquee:hover .nx-marquee__track {
+    animation-play-state: paused;
+}
+
+.nx-marquee__group {
+    display: flex;
+    align-items: center;
+    flex: none;
+}
+
+.nx-marquee__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding-inline: clamp(1rem, 2.2vw, 2rem);
+    font-family: var(--font-display);
+    font-size: clamp(0.875rem, 1.5vw, 1.2rem);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.nx-marquee__icon {
+    width: 18px;
+    height: 18px;
+    color: var(--color-accent);
+    flex: none;
+}
+
+.nx-marquee__sep {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--color-accent);
+    margin-left: clamp(1rem, 2.2vw, 2rem);
+    flex: none;
+}
+
+@keyframes nx-marquee {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+/* ============================================================
+   SECTION 4 — MODUL SHOWCASE (krem, editorial 3 kolom)
+   Daftar di x≈4.3% → Frame 4:5 di x:29%-62% (lebar ≈33vw) → Detail di x≈68%
+   ============================================================ */
+.nx-cream {
+    position: relative;
+    height: 320vh;
+    background: var(--color-cream);
+    color: var(--nx-ink);
+}
+
+.nx-cream__stage {
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: clamp(2.5rem, 5vh, 4rem);
+    padding-inline: 0;
+    overflow: hidden;
+}
+
+h2.nx-cream__head {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    max-width: 16ch;
+    font-size: clamp(2rem, 3.2vw, 3.4rem);
+    line-height: 1.15;
+    text-align: center;
+    text-transform: none;
+    margin-inline: auto !important;
+    margin-bottom: clamp(6.5vh, 7.5vh, 8.5vh) !important;
+    color: #111111;
+}
+
+/* Kolom seimbang di desktop: absolute placement berbasis persentase vw */
+.nx-modules {
+    position: relative;
+    width: 100%;
+    height: min(77vh, 41.25vw);
+    min-height: min(77vh, 41.25vw);
+}
+
+/* Daftar editorial kiri: di x ≈ 4.3% */
+.nx-modules__list {
+    position: absolute;
+    left: 4.3vw;
+    width: 21vw;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    z-index: 2;
+}
+
+.nx-modules__item {
+    display: block;
+    width: 100%;
+    padding-block: 0.55rem;
+    text-align: left;
+    font-size: clamp(1.05rem, 1.45vw, 1.35rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #B5B5B5;
+    opacity: 0.7;
+    transform: translateX(0);
+    transition: color 0.3s var(--nx-ease), opacity 0.3s var(--nx-ease),
+        transform 0.3s var(--nx-ease);
+}
+
+.nx-modules__item:hover {
+    color: #555555;
+    opacity: 0.95;
+}
+
+.nx-modules__item.is-active {
+    color: #111111;
+    opacity: 1;
+    font-weight: 700;
+    transform: translateX(6px);
+}
+
+/* Frame visual tengah: rasio 4:5, lebar ≈33vw (x: 29%-62%), tinggi maks 77vh */
+.nx-modules__frame {
+    position: absolute;
+    left: 29vw;
+    width: 33vw;
+    top: 0;
+    max-height: 77vh;
+    aspect-ratio: 4 / 5;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(10, 8, 6, 0.1);
+    background: linear-gradient(135deg, #14142B 0%, #1E1B4B 60%, #2A1650 100%);
+    box-shadow: 0 24px 60px rgba(20, 20, 43, 0.22);
+    z-index: 2;
+}
+
+/* Pergantian visual: crossfade + naik 16px, 0,4 detik. */
+.nx-modules__slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s var(--nx-ease), transform 0.4s var(--nx-ease);
+    pointer-events: none;
+}
+
+.nx-modules__slide.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Kolom kanan (Detail): di x ≈ 68% */
+.nx-modules__detail {
+    position: absolute;
+    left: 68vw;
+    width: 28vw;
+    top: 0;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    z-index: 2;
+}
+
+/* ---- Mockup UI orisinal: mengisi ≥85% area gambar potret 4:5 ---- */
+.nx-mock {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.65rem;
+    padding: 5%;
+    color: #FFFFFF;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.nx-mock__top {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nx-mock__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #F0490A;
+    flex: none;
+}
+
+.nx-mock__dot.is-green {
+    background: #22C55E;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+}
+
+.nx-mock__pill {
+    margin-left: auto;
+    padding: 0.12rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* Mockup AI Assistant */
+.nx-mock--ai .nx-mock__chatbox {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-block: auto;
+}
+
+.nx-mock__msg {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.nx-mock__msg--user {
+    justify-content: flex-end;
+}
+
+.nx-mock__msg--user .nx-mock__bubble {
+    background: rgba(240, 73, 10, 0.22);
+    border: 1px solid rgba(240, 73, 10, 0.4);
+    border-radius: 12px 12px 2px 12px;
+    padding: 0.65rem 0.85rem;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: #FFFFFF;
+    max-width: 88%;
+}
+
+.nx-mock__msg--bot .nx-mock__bubble {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px 12px 12px 2px;
+    padding: 0.75rem 0.85rem;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: #FFFFFF;
+    max-width: 88%;
+}
+
+.nx-mock__msg--bot .nx-mock__bubble p {
+    margin: 0;
+}
+
+.nx-mock__bot-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #F0490A, #A855F7);
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    font-weight: 800;
+    flex: none;
+}
+
+.nx-mock__tags {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.nx-mock__tags span {
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(240, 73, 10, 0.16);
+    border: 1px solid rgba(240, 73, 10, 0.3);
+    color: #F5A623;
+    font-size: 9.5px;
+    font-weight: 600;
+}
+
+.nx-mock__inputbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 0.75rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.nx-mock__sendbtn {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: #F0490A;
+    display: grid;
+    place-items: center;
+    color: #FFF;
+    flex: none;
+}
+
+.nx-mock__sendbtn svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Mockup Downloader */
+.nx-mock__row,
+.nx-mock__cart,
+.nx-mock__player {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 0.6rem 0.75rem;
+}
+
+.nx-mock__row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.nx-mock__plat {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex: none;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #F0490A, #8E0E00);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.nx-mock__meta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.nx-mock__bar {
+    display: block;
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.32);
+}
+
+.nx-mock__track {
+    position: relative;
+    display: block;
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    overflow: hidden;
+}
+
+.nx-mock__track > span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #F0490A, #F5A623);
+}
+
+.nx-mock__st {
+    flex: none;
+    font-size: 10px;
+    font-weight: 700;
+    color: #F5A623;
+}
+
+.nx-mock__st.is-done {
+    color: #4ADE80;
+}
+
+.nx-mock__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.nx-mock__btn {
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+/* Kasira POS */
+.nx-mock--pos {
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.nx-mock__posgrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.45rem;
+}
+
+.nx-mock__tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.55rem 0.5rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 10.5px;
+}
+
+.nx-mock__tile b {
+    font-weight: 700;
+}
+
+.nx-mock__tile i {
+    font-style: normal;
+    color: #F5A623;
+    font-weight: 700;
+}
+
+.nx-mock__cart {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.nx-mock__cline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 11px;
+}
+
+.nx-mock__cline.dim {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.nx-mock__cline.total {
+    font-weight: 800;
+    font-size: 12.5px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: 0.35rem;
+}
+
+.nx-mock__pay {
+    margin-top: 0.35rem;
+    display: block;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 10px;
+    background: #F0490A;
+    font-weight: 800;
+    font-size: 12px;
+}
+
+/* Tools Mockup */
+.nx-mock--tools .nx-mock__tools-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-block: auto;
+}
+
+.nx-mock__qr-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 0.65rem 0.75rem;
+}
+
+.nx-mock__qrimg-sm {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    flex: none;
+}
+
+.nx-mock__qr-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.nx-mock__qr-meta b {
+    font-size: 11.5px;
+    color: #F5A623;
+}
+
+.nx-mock__qr-meta span {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.nx-mock__note-card {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 0.65rem 0.75rem;
+}
+
+.nx-mock__note-title {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #F5A623;
+    margin-bottom: 0.35rem;
+}
+
+.nx-mock__note-line {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.5;
+}
+
+/* Music */
+.nx-mock--music .nx-mock__player {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.nx-mock__art {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    flex: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #4B0FB8, #F0490A);
+}
+
+.nx-mock__art svg {
+    width: 22px;
+    height: 22px;
+}
+
+.nx-mock__song {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.nx-mock__song b {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nx-mock__song span {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.nx-mock__play {
+    width: 32px;
+    height: 32px;
+    flex: none;
+    border-radius: 999px;
+    background: #FFFFFF;
+    position: relative;
+}
+
+.nx-mock__play::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 9px;
+    border-left: 9px solid #14142B;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+}
+
+.nx-mock__track--song {
+    height: 4px;
+}
+
+.nx-mock__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+}
+
+.nx-mock__controls span {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.nx-mock__controls span.big {
+    width: 14px;
+    height: 14px;
+    background: #F0490A;
+}
+
+.nx-modules__detail {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+/* Detail kanan: masuk crossfade + naik 16px, 0,4 detik saat modul berganti. */
+.nx-modules__pane.is-active {
+    animation: nx-mod-in 0.4s var(--nx-ease);
+}
+
+@keyframes nx-mod-in {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nx-modules__index {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--nx-muted);
+    margin-bottom: 0.75rem;
+}
+
+.nx-modules__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 2vw, 1.75rem);
+    text-transform: uppercase;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+}
+
+.nx-modules__desc {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: rgba(10, 10, 18, 0.6);
+    margin-bottom: 1.25rem;
+}
+
+.nx-modules__features {
+    display: flex;
+    flex-direction: column;
+}
+
+.nx-modules__feature {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-block: 0.625rem;
+    border-top: 1px solid var(--nx-line-light);
+    font-size: 12.5px;
+    font-weight: 500;
+}
+
+.nx-badge-state {
+    flex: none;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.nx-badge-state--live {
+    background: rgba(22, 163, 74, 0.14);
+    color: #15803D;
+}
+
+.nx-badge-state--soon {
+    background: rgba(10, 10, 18, 0.06);
+    color: rgba(10, 10, 18, 0.45);
+}
+
+/* ============================================================
+   SECTION 5 — PUTIH (word-colour scrub + project carousel)
+   ============================================================ */
+.nx-white {
+    position: relative;
+    background: var(--nx-paper);
+    color: var(--nx-ink);
+}
+
+.nx-statement {
+    padding-block: clamp(5rem, 12vh, 8rem);
+}
+
+.nx-statement__text {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4.1vw, 4.2rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+}
+
+.nx-statement__word {
+    color: #D9D9D9;
+    transition: color 0.12s linear;
+}
+
+.nx-statement__word.is-lit {
+    color: var(--nx-ink);
+}
+
+.nx-projects {
+    position: relative;
+    height: 300vh;
+    background: var(--nx-paper);
+}
+
+.nx-projects__stage {
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    padding-block: clamp(3rem, 7vh, 5rem);
+}
+
+.nx-projects__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.nx-projects__title {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(1.75rem, 3.4vw, 3rem);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    max-width: 16ch;
+}
+
+.nx-projects__viewport {
+    width: 100%;
+    overflow: hidden;
+}
+
+.nx-projects__track {
+    display: flex;
+    gap: clamp(1.5rem, 3.9vw, 3.5rem);
+    width: max-content;
+    padding-inline: clamp(1.5rem, 3vw, 3rem) clamp(2.5rem, 5vw, 6rem);
+    will-change: transform;
+}
+
+/* Kartu editorial besar: visual fokus, tipografi kuat. */
+.nx-project {
+    width: clamp(320px, 42.3vw, 820px);
+    flex: none;
+    cursor: pointer;
+}
+
+.nx-project__media {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--nx-line-light);
+    background: linear-gradient(135deg, #14142B 0%, #1E1B4B 60%, #2A1650 100%);
+    transition: transform 0.5s var(--nx-ease), box-shadow 0.5s var(--nx-ease);
+}
+
+.nx-project:hover .nx-project__media {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 50px rgba(20, 20, 43, 0.2);
+}
+
+.nx-project:hover .nx-pmock {
+    transform: scale(1.025);
+}
+
+.nx-project__num {
+    display: block;
+    margin-top: 36px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #888888;
+}
+
+.nx-project__cat {
+    margin-top: 0.5rem;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    color: #222222;
+}
+
+.nx-project__name {
+    margin-top: 0.25rem;
+    font-family: var(--font-heading);
+    font-size: clamp(1.4rem, 2.2vw, 2.25rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: #111111;
+}
+
+.nx-project__desc {
+    margin-top: 0.6rem;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555555;
+    max-width: 46ch;
+}
+
+.nx-project__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-accent);
+}
+
+.nx-project__link svg {
+    width: 13px;
+    height: 13px;
+    transition: transform 0.25s var(--nx-ease);
+}
+
+.nx-project:hover .nx-project__link svg {
+    transform: translateX(3px);
+}
+
+.nx-project__soon {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(10, 10, 18, 0.4);
+}
+
+/* ---- Mockup produk: satu design system NEXUS, tiga komposisi ---- */
+.nx-pmock {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    gap: 0.6rem;
+    padding: 4.5%;
+    color: #FFFFFF;
+    font-size: 11px;
+    overflow: hidden;
+    transition: transform 0.5s var(--nx-ease);
+}
+
+/* 01 — workspace gelap */
+.nx-pmock--ws {
+    flex-direction: row;
+}
+
+.nx-pmock__side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    width: 17%;
+    padding: 0.6rem 0.4rem;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nx-pmock__logo {
+    width: 20px;
+    height: 20px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, #F0490A, #8E0E00);
+}
+
+.nx-pmock__nav {
+    width: 70%;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.nx-pmock__nav.on {
+    background: #F0490A;
+}
+
+.nx-pmock__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-width: 0;
+}
+
+.nx-pmock__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.65rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nx-pmock__bar {
+    display: block;
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.nx-pmock__avatar {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #C9B6F2, #4B0FB8);
+}
+
+.nx-pmock__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.nx-pmock__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.55rem 0.6rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nx-pmock__stat i {
+    display: block;
+    width: 55%;
+    height: 6px;
+    border-radius: 999px;
+    background: #F5A623;
+}
+
+.nx-pmock__stat b {
+    display: block;
+    width: 80%;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.nx-pmock__chart {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 0.45rem;
+    padding: 0.6rem 0.65rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 0;
+}
+
+.nx-pmock__chart span {
+    flex: 1;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #F0490A, rgba(240, 73, 10, 0.25));
+}
+
+/* 02 — POS */
+.nx-pmock--pos {
+    flex-direction: row;
+}
+
+.nx-pmock__items {
+    flex: 1.25;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    align-content: center;
+}
+
+.nx-pmock__tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.55rem 0.6rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 10.5px;
+}
+
+.nx-pmock__tile b {
+    font-weight: 700;
+}
+
+.nx-pmock__tile i {
+    font-style: normal;
+    color: #F5A623;
+    font-weight: 700;
+}
+
+.nx-pmock__tile em {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+}
+
+.nx-pmock__tile em.ok {
+    background: #4ADE80;
+}
+
+.nx-pmock__tile em.low {
+    background: #F5A623;
+}
+
+.nx-pmock__bill {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.65rem 0.7rem;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.nx-pmock__brow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 10.5px;
+}
+
+.nx-pmock__brow.total {
+    font-weight: 800;
+    font-size: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: 0.4rem;
+}
+
+.nx-pmock__paybtn {
+    margin-top: auto;
+    display: block;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 9px;
+    background: #F0490A;
+    font-weight: 800;
+    font-size: 11.5px;
+}
+
+/* 03 — browser terang */
+.nx-pmock--web {
+    flex-direction: column;
+    gap: 0.5rem;
+    background: #F7F6F1;
+    color: #14142B;
+}
+
+.nx-pmock__browser {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.55rem;
+    border-radius: 8px;
+    background: #FFFFFF;
+    border: 1px solid rgba(10, 8, 6, 0.1);
+}
+
+.nx-pmock__browser span {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #E2E0D5;
+}
+
+.nx-pmock__browser i {
+    margin-left: 0.4rem;
+    font-style: normal;
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #8a8a8a;
+}
+
+.nx-pmock__webnav {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.nx-pmock__weblogo {
+    width: 44px;
+    height: 10px;
+    border-radius: 999px;
+    background: #14142B;
+}
+
+.nx-pmock__weblinks {
+    display: flex;
+    gap: 0.3rem;
+    margin-left: auto;
+}
+
+.nx-pmock__weblinks i {
+    width: 26px;
+    height: 7px;
+    border-radius: 999px;
+    background: #D8D6C9;
+}
+
+.nx-pmock__webcta {
+    width: 52px;
+    height: 14px;
+    border-radius: 999px;
+    background: #F0490A;
+}
+
+.nx-pmock__hero {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.7rem 0.75rem;
+    border-radius: 10px;
+    background: #FFFFFF;
+    border: 1px solid rgba(10, 8, 6, 0.08);
+}
+
+.nx-pmock__hline {
+    display: block;
+    height: 9px;
+    border-radius: 999px;
+    background: #14142B;
+    width: 72%;
+}
+
+.nx-pmock__hline.accent {
+    background: #F0490A;
+    width: 46%;
+}
+
+.nx-pmock__hline.short {
+    background: #D8D6C9;
+    width: 58%;
+}
+
+.nx-pmock__webbtn {
+    margin-top: 0.2rem;
+    width: 74px;
+    height: 16px;
+    border-radius: 999px;
+    background: #14142B;
+}
+
+.nx-pmock__serv {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.nx-pmock__serv span {
+    height: 30px;
+    border-radius: 8px;
+    background: #FFFFFF;
+    border: 1px solid rgba(10, 8, 6, 0.08);
+}
+
+/* Desktop-only "LIHAT" cursor */
+.nx-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    border-radius: 999px;
+    background: #E8590C;
+    color: #FFFFFF;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+    transition: opacity 0.25s var(--nx-ease), transform 0.25s var(--nx-ease);
+    will-change: transform, opacity;
+}
+
+.nx-cursor.is-active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* ============================================================
+   SECTION 6 — PRINSIP (7.8: kartu oranye sticky + carousel horizontal)
+   ============================================================ */
+.nx-principles {
+    position: relative;
+    background: var(--nx-paper);
+    color: var(--nx-ink);
+    padding-block: clamp(4rem, 9vh, 7rem) clamp(4rem, 8vh, 6rem);
+    overflow: hidden;
+}
+
+.nx-principles__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: end;
+    margin-bottom: clamp(2.5rem, 6vh, 4rem);
+}
+
+h2.nx-principles__title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(1.8rem, 3.3vw, 3.4rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    text-transform: none !important;
+    color: #111111;
+}
+
+.nx-principles__desc {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #222222;
+    max-width: 44ch;
+    padding-bottom: 0.25rem;
+}
+
+.nx-principles__carousel-container {
+    margin: 0 4vw;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    min-height: 380px;
+}
+
+/* Kartu 1: Sticky oranye di kiri */
+.nx-principles__sticky-card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: clamp(280px, 26vw, 540px);
+    z-index: 10;
+    background: linear-gradient(135deg, #F0490A 0%, #E8430F 100%);
+    color: #FFFFFF;
+    border-radius: 16px;
+    padding: 2.2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 14px 0 32px rgba(0, 0, 0, 0.12);
+}
+
+.nx-psticky__brand {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: #FFFFFF;
+}
+
+.nx-psticky__content {
+    margin-block: auto;
+}
+
+.nx-psticky__title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: #FFFFFF;
+    margin: 0 0 0.5rem;
+}
+
+.nx-psticky__sub {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+}
+
+.nx-psticky__badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Gradien fade di tepi kiri area geser */
+.nx-principles__fade-left {
+    position: absolute;
+    left: clamp(280px, 26vw, 540px);
+    top: 0;
+    bottom: 0;
+    width: 48px;
+    z-index: 9;
+    pointer-events: none;
+    background: linear-gradient(to right, rgba(251, 246, 241, 0.95), transparent);
+}
+
+/* Area geser horizontal */
+.nx-principles__scroll-wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-left: calc(clamp(280px, 26vw, 540px) + 0.7vw);
+    padding-right: 4vw;
+}
+
+.nx-principles__scroll-wrap::-webkit-scrollbar {
+    display: none;
+}
+
+.nx-principles__track {
+    display: flex;
+    gap: clamp(10px, 0.7vw, 16px);
+    width: max-content;
+    padding-block: 0.5rem 3.5rem;
+}
+
+/* Kartu krem */
+.nx-pcard {
+    width: clamp(240px, 23.4vw, 480px);
+    flex: none;
+    background: #FBF6F1;
+    border-radius: 16px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(10, 8, 6, 0.05);
+    transition: transform 0.3s var(--nx-ease), box-shadow 0.3s var(--nx-ease);
+}
+
+.nx-pcard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+}
+
+.nx-pcard__quote {
+    font-size: 38px;
+    line-height: 1;
+    font-family: serif;
+    color: #E8452C;
+    margin-bottom: 0.5rem;
+}
+
+.nx-pcard__num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: rgba(10, 10, 18, 0.45);
+    margin-bottom: 0.4rem;
+}
+
+.nx-pcard__title {
+    margin: 0 0 0.6rem;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #111111;
+}
+
+.nx-pcard__desc {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    font-style: italic;
+    color: #444444;
+}
+
+/* Tombol panah bulat oranye di kanan-bawah */
+.nx-principles__nav {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 0.5rem;
+    display: flex;
+    gap: 0.6rem;
+    z-index: 12;
+}
+
+.nx-pnav__btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: #F0490A;
+    color: #FFFFFF;
+    border: none;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 4px 14px rgba(240, 73, 10, 0.3);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.nx-pnav__btn:hover {
+    background: #E8430F;
+    transform: scale(1.06);
+}
+
+.nx-pnav__btn:active {
+    transform: scale(0.95);
+}
+
+.nx-pnav__btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ============================================================
+   CTA SEBELUM FOOTER (dark premium, aksen oranye)
+   ============================================================ */
+.nx-cta {
+    position: relative;
+    background: #0A0A0A;
+    color: #FFFFFF;
+    overflow: hidden;
+}
+
+.nx-cta__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding-block: clamp(5rem, 14vh, 9rem);
+    max-width: 1100px;
+}
+
+.nx-cta__title {
+    margin: 0;
+    font-family: var(--font-hero);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    max-width: 16ch;
+}
+
+.nx-cta__text {
+    margin: 0;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 52ch;
+}
+
+.nx-cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: 0.5rem;
+    padding: 1rem 1.75rem;
+    border-radius: 999px;
+    background: #FDFDFD;
+    color: #111111 !important;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: transform 0.3s var(--nx-ease), background-color 0.3s var(--nx-ease),
+        color 0.3s var(--nx-ease);
+}
+
+.nx-cta__btn svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s var(--nx-ease);
+}
+
+.nx-cta__btn:hover {
+    transform: translateY(-2px);
+    background: #F0490A;
+    color: #FFFFFF !important;
+}
+
+.nx-cta__btn:hover svg {
+    transform: translateX(4px);
+}
+
+/* ============================================================
+   SECTION 7 — FOOTER
+   ============================================================ */
+/* ============================================================
+   SECTION 7 — FOOTER (editorial 4 kolom + giant type)
+   ============================================================ */
+.nx-footer {
+    position: relative;
+    background: var(--color-base);
+    color: var(--color-white);
+    padding-top: clamp(3.5rem, 9vh, 6rem);
+    overflow: hidden;
+}
+
+.nx-footer__abstract-curve {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: clamp(260px, 30vw, 450px);
+    height: auto;
+    pointer-events: none;
+    opacity: 0.8;
+    z-index: 1;
+}
+
+.nx-footer__grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+    padding-bottom: clamp(3rem, 7vh, 5rem);
+}
+
+.nx-footer__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 1rem;
+}
+
+.nx-footer__brandname {
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.nx-footer__blurb {
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.55);
+    max-width: 38ch;
+}
+
+.nx-footer__title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 1rem;
+}
+
+.nx-footer__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.nx-footer__list a,
+.nx-footer__list span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+    transition: color 0.22s ease;
+}
+
+.nx-footer__list a:hover {
+    color: var(--color-white);
+}
+
+.nx-footer__list .is-soon {
+    color: rgba(255, 255, 255, 0.32);
+    cursor: default;
+}
+
+/* Dekorasi tipografi raksasa: Orbitron 900, muat penuh tanpa terpotong samping */
+.nx-footer__giantwrap {
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    padding-inline: 0;
+    width: 100%;
+}
+
+.nx-footer__giant {
+    display: block;
+    font-family: var(--font-hero);
+    font-weight: 900;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-align: center;
+    line-height: 0.95;
+    font-size: clamp(2.5rem, 8.8vw, 9.5rem);
+    color: #FFFFFF;
+    opacity: 0.08;
+    transform: translateY(18%);
+    user-select: none;
+}
+
+.nx-footer__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-block: 1.5rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--nx-line-dark);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Tombol kecil "Back to top": paper/putih, teks gelap, 44px. */
+.nx-totop {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.6rem 1.1rem;
+    flex: none;
+    border-radius: 999px;
+    background: #FDFDFD;
+    color: #111111 !important;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: transform 0.3s var(--nx-ease), background-color 0.3s var(--nx-ease),
+        color 0.3s var(--nx-ease);
+}
+
+.nx-totop svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.3s var(--nx-ease);
+}
+
+.nx-totop:hover {
+    transform: translateY(-3px);
+    background: #F0490A;
+    color: #FFFFFF !important;
+}
+
+.nx-totop:hover svg {
+    transform: translateY(-2px);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* ---- Tablet and below: modul tidak di-pin, susun vertikal
+   daftar → visual → detail (urutan DOM sudah begitu). ---- */
+@media (max-width: 1024px) {
+    .nx-cream {
+        height: auto;
+    }
+
+    .nx-cream__stage {
+        height: auto;
+        padding-block: clamp(3.5rem, 8vh, 5rem);
+    }
+
+    .nx-modules {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.5rem;
+        align-items: stretch;
+    }
+
+    .nx-modules__list {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .nx-modules__item {
+        font-size: 1rem;
+        padding-block: 0.55rem;
+    }
+
+    .nx-modules__item.is-active {
+        transform: none;
+    }
+
+    .nx-modules__frame {
+        max-width: 100%;
+    }
+
+    /* Mockup dua kolom (POS, QR) ditumpuk di layar kecil. */
+    .nx-mock--pos,
+    .nx-mock--qr {
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .nx-mock__posgrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .nx-mock__qrimg {
+        width: 34%;
+    }
+
+    .nx-footer__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2.25rem;
+    }
+
+    .nx-principles__head {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --robot-h: 68svh;
+        --eyes-y: 34svh;
+        --face-x: 50vw;
+        --nx-amber: #F5A623;
+        --nx-nav-h: 64px;
+    }
+
+    /* Navbar 64px */
+    .nx-nav {
+        height: 64px;
+        min-height: 64px;
+        padding-inline: 20px;
+    }
+
+    .nx-nav__cta {
+        height: 44px;
+        min-height: 44px;
+        font-size: 14px;
+    }
+
+    /* Hero min-height max(100svh, 760px) */
+    .nx-hero {
+        position: relative;
+        height: auto;
+        min-height: max(100svh, 760px);
+        overflow: hidden;
+    }
+
+    /* Badge top 80px */
+    .nx-badge {
+        position: absolute;
+        top: 80px;
+        left: 20px;
+        margin-bottom: 0;
+        z-index: 5;
+    }
+
+    .nx-hero__content {
+        position: static;
+        padding: 0;
+        height: auto;
+    }
+
+    .nx-hero__copy {
+        position: static;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    /* Headline mulai top 120px, left/right 20px, font-size clamp(1.7rem, 7.2vw, 2.4rem), line-height 1.35 */
+    .nx-hero__headline {
+        position: absolute;
+        top: 120px;
+        left: 20px;
+        right: 20px;
+        width: calc(100% - 40px);
+        max-width: calc(100% - 40px);
+        font-size: clamp(1.7rem, 7.2vw, 2.4rem);
+        line-height: 1.35;
+        letter-spacing: 0.03em;
+        text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+        z-index: 5;
+    }
+
+    .nx-line-mask {
+        width: 100%;
+        max-width: 100%;
+        overflow: visible;
+        white-space: normal;
+    }
+
+    .nx-line-part {
+        display: block;
+    }
+
+    /* Robot: position absolute; left 50%; translateX(-50%); top 34svh; height 68svh; width auto; max-width none; object-fit cover; object-position center top; z-index di bawah headline */
+    .nx-hero__visual {
+        position: absolute;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        top: 34svh !important;
+        height: 68svh !important;
+        width: auto !important;
+        max-width: none !important;
+        z-index: 2;
+        pointer-events: auto;
+        opacity: 1 !important;
+    }
+
+    .nx-hero__figure {
+        position: relative;
+        height: 100%;
+        width: auto;
+    }
+
+    .nx-hero__media,
+    .nx-hero__mask {
+        position: relative;
+        height: 100%;
+        width: auto;
+        max-width: none;
+        object-fit: cover;
+        object-position: center top;
+    }
+
+    /* Foot wrapper di mobile menampung glass card dan tagline */
+    .nx-hero__foot-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: 33px; /* Ruang bawah hero min 32px */
+        z-index: 6;
+    }
+
+    /* Glass card versi ringkas: max-height 22svh, z-index tinggi, tidak menutupi wajah */
+    .nx-glass {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        width: 100%;
+        max-height: 22svh;
+        overflow: hidden;
+        margin: 0;
+        padding: 0.55rem 0.85rem;
+        z-index: 6;
+        border-radius: 14px;
+    }
+
+    .nx-glass__head {
+        padding-bottom: 0.35rem;
+    }
+
+    .nx-glass__brand {
+        font-size: 11px;
+    }
+
+    .nx-glass__title {
+        margin: 0.25rem 0 0.15rem;
+        font-size: 11.5px;
+        line-height: 1.25;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .nx-glass__desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 10.5px;
+        line-height: 1.3;
+    }
+
+    /* Tagline: alur normal (bukan absolute) di bawah card, jarak 16px, font .8rem, 3-4 baris */
+    .nx-hero__foot {
+        position: relative;
+        left: auto;
+        bottom: auto;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        font-size: 0.8rem;
+        line-height: 1.35;
+        letter-spacing: 0.02em;
+        color: rgba(255, 255, 255, 0.88);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Pinned Scrub Mobile: Card ~82vw x 44vh, kata di atas & bawah */
+    .nx-scrub__card {
+        width: 82vw !important;
+        height: 44vh !important;
+        border-radius: 18px;
+    }
+
+    .nx-scrub__word {
+        font-size: clamp(1.4rem, 6.2vw, 2.2rem);
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    .nx-scrub__word--left {
+        left: 50% !important;
+        right: auto !important;
+        top: calc(50% - 25vh) !important;
+        transform: translate(-50%, -100%) !important;
+    }
+
+    .nx-scrub__word--right {
+        left: 50% !important;
+        right: auto !important;
+        top: calc(50% + 25vh) !important;
+        transform: translate(-50%, 0) !important;
+    }
+
+    /* Film Mini Mobile Refinements */
+    .nx-film__s0-copy {
+        font-size: clamp(0.95rem, 4.4vw, 1.35rem);
+        gap: 0.4rem;
+        white-space: nowrap;
+    }
+
+    .nx-film__s0-badge {
+        padding: 0.18em 0.55em;
+        font-size: 0.9em;
+    }
+
+    .nx-film__pill {
+        white-space: nowrap;
+        font-size: clamp(0.72rem, 3vw, 0.92rem);
+        padding: 0.45em 0.95em;
+        max-width: 90%;
+    }
+
+    .nx-film__trash-btn {
+        width: 48px;
+        height: 48px;
+    }
+
+    .nx-film__s4-title {
+        font-size: clamp(1.2rem, 5.2vw, 1.7rem);
+        line-height: 1.3;
+    }
+
+    .nx-film__start-pill {
+        font-size: 11px;
+        padding: 4px 12px;
+        bottom: 10%;
+        right: 8%;
+    }
+
+    .nx-film__orbit-svg {
+        transform: scale(0.6);
+        transform-origin: 25% 50%;
+    }
+
+    .nx-film__sphere {
+        width: 52px;
+        height: 52px;
+    }
+
+    .nx-film__sphere-wrap {
+        left: 20%;
+    }
+
+    .nx-film__orbit-word-wrap {
+        left: calc(20% + 36px + 10px);
+    }
+
+    .nx-film__orbit-word {
+        font-size: clamp(1.1rem, 4.8vw, 1.6rem);
+        white-space: nowrap;
+    }
+
+    /* Projects mobile: satu project per baris, tersusun vertikal. */
+    .nx-projects {
+        height: auto;
+    }
+
+    .nx-projects__stage {
+        height: auto;
+        padding-block: clamp(3rem, 8vh, 4rem);
+    }
+
+    .nx-projects__viewport {
+        overflow: visible;
+    }
+
+    .nx-projects__track {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2.5rem;
+        width: auto;
+        transform: none !important;
+        padding-inline: clamp(1.5rem, 8vw, 8rem);
+    }
+
+    .nx-project {
+        width: 100%;
+        cursor: default;
+    }
+
+    .nx-project__link {
+        min-height: 44px;
+    }
+
+    /* Custom cursor is desktop-only. */
+    .nx-cursor {
+        display: none;
+    }
+
+    /* Principles carousel: kartu oranye di atas, kartu krem bergeser di bawah */
+    .nx-principles__carousel-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        min-height: auto;
+        overflow: visible;
+    }
+
+    .nx-principles__sticky-card {
+        position: relative;
+        width: 100%;
+        min-height: 200px;
+        box-shadow: 0 8px 24px rgba(240, 73, 10, 0.15);
+    }
+
+    .nx-principles__fade-left {
+        display: none;
+    }
+
+    .nx-principles__scroll-wrap {
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .nx-pcard {
+        width: 78vw;
+        min-height: 260px;
+    }
+
+    .nx-principles__nav {
+        position: static;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+    }
+
+    /* CTA: tombol penuh, tetap proporsional. */
+    .nx-cta__btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Footer mobile: 1 kolom, target sentuh 44px, font 15px. */
+    .nx-footer__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .nx-footer__list a,
+    .nx-footer__list span {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .nx-footer__list a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+
+    .nx-footer__giant {
+        font-size: 15.5vw;
+    }
+
+    .nx-footer__bottom {
+        row-gap: 0.75rem;
+    }
+
+    .nx-footer__bottom .nx-totop {
+        margin-left: auto;
+    }
+}
+
+/* Very narrow phones (360px): keep the 2.1rem clamp floor from Bagian 7.2. */
+@media (max-width: 380px) {
+    .nx-statement__text {
+        font-size: clamp(1.5rem, 7.4vw, 2rem);
+    }
+}
+
+/* Short landscape phones — hero must not clip. */
+@media (max-height: 520px) and (orientation: landscape) {
+    .nx-hero {
+        height: 100svh;
+        min-height: 420px;
+    }
+
+    .nx-hero__visual {
+        height: 100svh;
+        width: 60vw;
+        left: 30vw;
+        opacity: 0.6;
+    }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   Every pin, scrub and parallax is removed; content is left in
+   its final, readable state. JS also skips ScrollTrigger setup.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .nx-marquee__track {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .nx-hero__grain {
+        display: none;
+    }
+
+    .nx-line-inner,
+    .nx-glass,
+    .nx-badge,
+    .nx-hero__foot,
+    .nx-hero__visual {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .nx-hero__visual {
+        animation: none !important;
+    }
+
+    .nx-hero__capsule {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .nx-modules__slide,
+    .nx-statement__word,
+    .nx-scrub__word,
+    .nx-scrub__card,
+    .nx-projects__track,
+    .nx-principle-row,
+    .nx-cta__inner {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .nx-modules__slide {
+        position: relative;
+    }
+
+    .nx-modules__slide:not(.is-active) {
+        display: none;
+    }
+
+    .nx-cursor {
+        display: none !important;
+    }
+
+    .nx-body *,
+    .nx-body *::before,
+    .nx-body *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+

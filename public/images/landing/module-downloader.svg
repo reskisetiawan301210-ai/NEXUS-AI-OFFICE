@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgDownloader" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="progGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="btnDown" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#bgDownloader)"/>
+
+  <!-- App Shell -->
+  <rect x="40" y="30" width="720" height="540" rx="16" fill="#0B132B" stroke="#1E293B" stroke-width="1.5"/>
+  <rect x="40" y="30" width="720" height="44" rx="16" fill="#070D1E"/>
+  <circle cx="68" cy="52" r="5" fill="#EF4444" opacity="0.8"/>
+  <circle cx="86" cy="52" r="5" fill="#F59E0B" opacity="0.8"/>
+  <circle cx="104" cy="52" r="5" fill="#10B981" opacity="0.8"/>
+  <text x="400" y="56" fill="#64748B" font-family="'Inter', sans-serif" font-size="12" font-weight="500" text-anchor="middle">NEXUS Downloader — Universal Media Queue</text>
+
+  <g transform="translate(68, 96)">
+    <!-- Main Search & Grab Bar -->
+    <rect x="0" y="0" width="664" height="64" rx="12" fill="#111C38" stroke="#1E293B" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="14" fill="#3B82F6" fill-opacity="0.15"/>
+    <path d="M27 32 L37 32 M32 27 L37 32 L32 37" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
+    <text x="56" y="37" fill="#E2E8F0" font-family="'Inter', sans-serif" font-size="14">https://youtube.com/watch?v=nexus_keynote_2026_demo</text>
+    <rect x="530" y="12" width="122" height="40" rx="8" fill="url(#btnDown)"/>
+    <text x="591" y="37" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="13" font-weight="600" text-anchor="middle">Unduh Media</text>
+
+    <!-- Source tags -->
+    <g transform="translate(0, 76)">
+      <rect x="0" y="0" width="94" height="26" rx="13" fill="#EF4444" fill-opacity="0.15" stroke="#EF4444" stroke-opacity="0.3"/>
+      <text x="47" y="17" fill="#FCA5A5" font-family="'Inter', sans-serif" font-size="11" font-weight="600" text-anchor="middle">YouTube 4K</text>
+
+      <rect x="104" y="0" width="80" height="26" rx="13" fill="#10B981" fill-opacity="0.15" stroke="#10B981" stroke-opacity="0.3"/>
+      <text x="144" y="17" fill="#6EE7B7" font-family="'Inter', sans-serif" font-size="11" font-weight="600" text-anchor="middle">TikTok HD</text>
+
+      <rect x="194" y="0" width="90" height="26" rx="13" fill="#EC4899" fill-opacity="0.15" stroke="#EC4899" stroke-opacity="0.3"/>
+      <text x="239" y="17" fill="#F9A8D4" font-family="'Inter', sans-serif" font-size="11" font-weight="600" text-anchor="middle">Instagram</text>
+
+      <rect x="294" y="0" width="80" height="26" rx="13" fill="#8B5CF6" fill-opacity="0.15" stroke="#8B5CF6" stroke-opacity="0.3"/>
+      <text x="334" y="17" fill="#C4B5FD" font-family="'Inter', sans-serif" font-size="11" font-weight="600" text-anchor="middle">MP3 Audio</text>
+    </g>
+
+    <!-- Active Download Card -->
+    <g transform="translate(0, 120)">
+      <rect x="0" y="0" width="664" height="110" rx="12" fill="#111B34" stroke="#2563EB" stroke-width="1.5"/>
+      <rect x="16" y="16" width="110" height="78" rx="8" fill="#1E293B"/>
+      <!-- Video thumbnail mock -->
+      <polygon points="65,45 65,65 82,55" fill="#FFFFFF" opacity="0.9"/>
+      
+      <text x="142" y="38" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="15" font-weight="600">NEXUS AI 2026 Keynote Presentation (1080p 60fps)</text>
+      <text x="142" y="60" fill="#64748B" font-family="'Inter', sans-serif" font-size="12">Format: MP4 • Ukuran: 284 MB • Kecepatan: 14.8 MB/s</text>
+
+      <!-- Progress bar -->
+      <rect x="142" y="74" width="420" height="8" rx="4" fill="#1E293B"/>
+      <rect x="142" y="74" width="310" height="8" rx="4" fill="url(#progGrad)"/>
+      <text x="580" y="82" fill="#10B981" font-family="'Inter', sans-serif" font-size="12" font-weight="700">74%</text>
+
+      <rect x="620" y="38" width="28" height="28" rx="6" fill="#1E293B"/>
+      <path d="M630 46 L638 58 M638 46 L630 58" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <!-- Completed History Cards -->
+    <g transform="translate(0, 246)">
+      <text x="0" y="16" fill="#94A3B8" font-family="'Inter', sans-serif" font-size="12" font-weight="700" letter-spacing="1">RIWAYAT UNDUHAN TERAKHIR</text>
+      
+      <rect x="0" y="28" width="664" height="52" rx="8" fill="#0E162C" stroke="#1E293B" stroke-width="1"/>
+      <circle cx="26" cy="54" r="10" fill="#10B981" fill-opacity="0.2"/>
+      <path d="M22 54 L25 57 L31 51" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+      <text x="48" y="58" fill="#E2E8F0" font-family="'Inter', sans-serif" font-size="13">Lofi Beats for Coding - 2 Hours Compilation.mp3</text>
+      <text x="560" y="58" fill="#64748B" font-family="'Inter', sans-serif" font-size="12">142 MB</text>
+      <text x="640" y="58" fill="#10B981" font-family="'Inter', sans-serif" font-size="12" text-anchor="end">Selesai</text>
+
+      <rect x="0" y="88" width="664" height="52" rx="8" fill="#0E162C" stroke="#1E293B" stroke-width="1"/>
+      <circle cx="26" cy="114" r="10" fill="#10B981" fill-opacity="0.2"/>
+      <path d="M22 114 L25 117 L31 111" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+      <text x="48" y="118" fill="#E2E8F0" font-family="'Inter', sans-serif" font-size="13">Cyberpunk UI Animation Showcase (4K).mp4</text>
+      <text x="560" y="118" fill="#64748B" font-family="'Inter', sans-serif" font-size="12">512 MB</text>
+      <text x="640" y="118" fill="#10B981" font-family="'Inter', sans-serif" font-size="12" text-anchor="end">Selesai</text>
+    </g>
+  </g>
+</svg>

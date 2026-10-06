@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" width="100%" height="100%">
+  <defs>
+    <linearGradient id="p3Bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1408"/>
+      <stop offset="50%" stop-color="#120B04"/>
+      <stop offset="100%" stop-color="#080502"/>
+    </linearGradient>
+    <linearGradient id="p3Orange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF5500"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <linearGradient id="goldText" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#FED7AA"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="750" fill="url(#p3Bg)"/>
+
+  <!-- Subtle warm glow -->
+  <circle cx="300" cy="300" r="240" fill="#FF5500" fill-opacity="0.10" filter="blur(40px)"/>
+
+  <g transform="translate(40, 60)">
+    <rect x="0" y="0" width="520" height="580" rx="20" fill="#171008" stroke="#36220E" stroke-width="2"/>
+    <rect x="0" y="0" width="520" height="52" rx="20" fill="#100A04"/>
+    <circle cx="28" cy="26" r="5" fill="#EF4444"/>
+    <circle cx="44" cy="26" r="5" fill="#F59E0B"/>
+    <circle cx="60" cy="26" r="5" fill="#10B981"/>
+    
+    <text x="260" y="31" fill="#FDBA74" font-family="'Inter', sans-serif" font-size="12" font-weight="600" text-anchor="middle">auraglobal.agency / portfolio</text>
+
+    <!-- Agency Showcase Mock -->
+    <g transform="translate(24, 76)">
+      <!-- Hero Banner of Website -->
+      <rect x="0" y="0" width="472" height="210" rx="14" fill="#24170B" stroke="#422912" stroke-width="1.5"/>
+      
+      <!-- Agency Header -->
+      <text x="24" y="38" fill="#FF8C42" font-family="'Inter', sans-serif" font-size="11" font-weight="800" letter-spacing="2">AURA GLOBAL CREATIVE</text>
+      <text x="24" y="80" fill="url(#goldText)" font-family="'Inter', sans-serif" font-size="28" font-weight="900" letter-spacing="-0.5">High-Impact Websites</text>
+      <text x="24" y="112" fill="url(#goldText)" font-family="'Inter', sans-serif" font-size="28" font-weight="900" letter-spacing="-0.5">Built For Ambitious Brands.</text>
+      <text x="24" y="142" fill="#D6D3D1" font-family="'Inter', sans-serif" font-size="13">Desain editorial, performa kilat, dan conversion rate kelas dunia.</text>
+
+      <rect x="24" y="162" width="140" height="34" rx="17" fill="url(#p3Orange)"/>
+      <text x="94" y="183" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="12" font-weight="700" text-anchor="middle">Lihat Showreel ↗</text>
+
+      <!-- 2 Client Showcase Cards -->
+      <g transform="translate(0, 226)">
+        <rect x="0" y="0" width="226" height="150" rx="12" fill="#1A1108" stroke="#332110" stroke-width="1.5"/>
+        <rect x="12" y="12" width="202" height="80" rx="8" fill="#2E1D0E"/>
+        <text x="113" y="56" fill="#FDBA74" font-family="'Inter', sans-serif" font-size="13" font-weight="700" text-anchor="middle">Luminary Studio</text>
+        <text x="16" y="112" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="13" font-weight="700">Fashion Brand Launch</text>
+        <text x="16" y="130" fill="#A8A29E" font-family="'Inter', sans-serif" font-size="11">Next.js • GSAP • Shopify</text>
+
+        <rect x="246" y="0" width="226" height="150" rx="12" fill="#1A1108" stroke="#332110" stroke-width="1.5"/>
+        <rect x="258" y="12" width="202" height="80" rx="8" fill="#2E1D0E"/>
+        <text x="359" y="56" fill="#FDBA74" font-family="'Inter', sans-serif" font-size="13" font-weight="700" text-anchor="middle">Hyperion AI</text>
+        <text x="262" y="112" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="13" font-weight="700">SaaS Product Landing</text>
+        <text x="262" y="130" fill="#A8A29E" font-family="'Inter', sans-serif" font-size="11">Framer • Webflow • 3D</text>
+      </g>
+
+      <!-- Client badge bar -->
+      <g transform="translate(0, 390)">
+        <rect x="0" y="0" width="472" height="70" rx="12" fill="#130D06" stroke="#2B1A0C" stroke-width="1"/>
+        <text x="24" y="28" fill="#A8A29E" font-family="'Inter', sans-serif" font-size="10" font-weight="700" letter-spacing="1">TRUSTED BY 40+ FOUNDERS WORLDWIDE</text>
+        <text x="24" y="52" fill="#FED7AA" font-family="'Inter', sans-serif" font-size="13" font-weight="600">✦ 99.8% Client Satisfaction Rate • Top 1% UI/UX Delivery</text>
+      </g>
+    </g>
+  </g>
+</svg>

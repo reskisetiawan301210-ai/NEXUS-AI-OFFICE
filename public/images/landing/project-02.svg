@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" width="100%" height="100%">
+  <defs>
+    <linearGradient id="p2Bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#071E13"/>
+      <stop offset="50%" stop-color="#04120B"/>
+      <stop offset="100%" stop-color="#020805"/>
+    </linearGradient>
+    <linearGradient id="p2Green" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="750" fill="url(#p2Bg)"/>
+
+  <!-- Subtle glow ring -->
+  <circle cx="300" cy="300" r="240" fill="#10B981" fill-opacity="0.10" filter="blur(40px)"/>
+
+  <g transform="translate(40, 60)">
+    <rect x="0" y="0" width="520" height="580" rx="20" fill="#0A1D13" stroke="#163826" stroke-width="2"/>
+    <rect x="0" y="0" width="520" height="52" rx="20" fill="#07170E"/>
+    <circle cx="28" cy="26" r="5" fill="#EF4444"/>
+    <circle cx="44" cy="26" r="5" fill="#F59E0B"/>
+    <circle cx="60" cy="26" r="5" fill="#10B981"/>
+    
+    <text x="260" y="31" fill="#6EE7B7" font-family="'Inter', sans-serif" font-size="12" font-weight="600" text-anchor="middle">kasira-pos.id / kasir-utama</text>
+
+    <!-- Kasira Dashboard Mock -->
+    <g transform="translate(24, 76)">
+      <!-- Sales Metric Card -->
+      <rect x="0" y="0" width="472" height="110" rx="14" fill="url(#p2Green)" opacity="0.95"/>
+      <text x="24" y="36" fill="#D1FAE5" font-family="'Inter', sans-serif" font-size="12" font-weight="600">TOTAL PENJUALAN HARI INI</text>
+      <text x="24" y="74" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="32" font-weight="900">Rp 4.850.000</text>
+      <text x="24" y="96" fill="#D1FAE5" font-family="'Inter', sans-serif" font-size="12">✦ 68 Transaksi Berhasil (+18% vs kemarin)</text>
+
+      <!-- Sales Chart Curve Graphic -->
+      <g transform="translate(0, 126)">
+        <rect x="0" y="0" width="472" height="150" rx="12" fill="#0D2619" stroke="#17402A" stroke-width="1.5"/>
+        <text x="20" y="30" fill="#A7F3D0" font-family="'Inter', sans-serif" font-size="13" font-weight="700">GRAFIK TRANSAKSI JAM SIBUK</text>
+        
+        <!-- Smooth bezier curve for sales graph -->
+        <path d="M30 115 Q 100 95, 150 110 T 260 70 T 360 40 T 440 60" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="360" cy="40" r="5" fill="#FFFFFF" stroke="#10B981" stroke-width="3"/>
+        <text x="360" y="28" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="11" font-weight="700" text-anchor="middle">Puncak (14:00)</text>
+
+        <!-- Time labels -->
+        <text x="30" y="136" fill="#6EE7B7" font-family="'Inter', sans-serif" font-size="10">09:00</text>
+        <text x="140" y="136" fill="#6EE7B7" font-family="'Inter', sans-serif" font-size="10">12:00</text>
+        <text x="250" y="136" fill="#6EE7B7" font-family="'Inter', sans-serif" font-size="10">15:00</text>
+        <text x="360" y="136" fill="#6EE7B7" font-family="'Inter', sans-serif" font-size="10">18:00</text>
+        <text x="440" y="136" fill="#6EE7B7" font-family="'Inter', sans-serif" font-size="10">21:00</text>
+      </g>
+
+      <!-- Recent Transactions List -->
+      <g transform="translate(0, 290)">
+        <text x="0" y="20" fill="#A7F3D0" font-family="'Inter', sans-serif" font-size="13" font-weight="700">TRANSAKSI TERBARU (MEJA &amp; TAKEAWAY)</text>
+        
+        <rect x="0" y="32" width="472" height="48" rx="8" fill="#0D2418" stroke="#183D28" stroke-width="1"/>
+        <text x="16" y="60" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="12" font-weight="600">#TRX-0982 • Kopi Aren + Croissant</text>
+        <text x="456" y="60" fill="#34D399" font-family="'Inter', sans-serif" font-size="13" font-weight="700" text-anchor="end">Rp 40.000 [QRIS]</text>
+
+        <rect x="0" y="88" width="472" height="48" rx="8" fill="#0D2418" stroke="#183D28" stroke-width="1"/>
+        <text x="16" y="116" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="12" font-weight="600">#TRX-0981 • Paket Meeting 4 Orang</text>
+        <text x="456" y="116" fill="#34D399" font-family="'Inter', sans-serif" font-size="13" font-weight="700" text-anchor="end">Rp 128.000 [Tunai]</text>
+
+        <rect x="0" y="144" width="472" height="48" rx="8" fill="#0D2418" stroke="#183D28" stroke-width="1"/>
+        <text x="16" y="172" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="12" font-weight="600">#TRX-0980 • 2x Matcha Latte Ice</text>
+        <text x="456" y="172" fill="#34D399" font-family="'Inter', sans-serif" font-size="13" font-weight="700" text-anchor="end">Rp 48.000 [QRIS]</text>
+      </g>
+    </g>
+  </g>
+</svg>
